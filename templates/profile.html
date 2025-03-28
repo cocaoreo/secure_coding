@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}프로필{% endblock %}
+{% block content %}
+<h2>프로필 관리</h2>
+<p>사용자명: {{ user.username }}</p>
+<p>현재 잔고: {{ balance }}원</p>
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+  소개글: <br>
+  <textarea name="bio" rows="4" cols="50">{{ user.bio or '' }}</textarea><br>
+  <button type="submit">프로필 업데이트</button>
+</form>
+
+<p>
+  <a href="{{ url_for('change_password') }}">
+    <button type="button">비밀번호 변경</button>
+  </a>
+</p>
+
+<h3>내가 등록한 상품</h3>
+<ul>
+  {% for product in products %}
+    <li>
+      이름:   <a href="{{ url_for('view_product', product_id=product.id) }}">{{ product.title }}</a><br>
+      가격: {{ product.price }}원<br>
+      <a href="{{ url_for('edit_product', product_id=product.id) }}">수정</a><br>
+      <a href="{{ url_for('delete_product', product_id=product.id) }}">삭제</a>
+    </li>
+  {% endfor %}
+</ul>
+
+<h3>거래 내역</h3>
+<ul>
+  {% for payment in payments %}
+    <li>
+      {% if payment['buyer_id'] == session['user_id'] %}
+        구매한 상품: {{ payment['product_title'] }} ({{ payment['amount'] }}원)
+      {% else %}
+        판매한 상품: {{ payment['product_title'] }} ({{ payment['amount'] }}원)
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+
+<a href="{{ url_for('dashboard') }}">대시보드로 돌아가기</a>
+{% endblock %}

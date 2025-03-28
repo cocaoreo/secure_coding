@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}검색{% endblock %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>검색 결과</title>
+</head>
+<body>
+    <h1>검색 결과</h1>
+    <ul>
+        {% if results %}
+            {% for item in results %}
+                <li>
+                    <!-- 상품명에 링크 추가 -->
+                    <a href="{{ url_for('view_product', product_id=item['id']) }}">{{ item['title'] }}
+                    </a><br>
+                    가격: {{ item['price'] }}원<br>
+                    설명: {{ item['description'] }}<br>
+                    판매자: <a href="{{ url_for('view_user_profile', user_id=item['seller_id']) }}">{{ item['seller_name'] }}</a>
+                </li>
+            {% endfor %}
+        {% else %}
+            <li>검색 결과가 없습니다.</li>
+        {% endif %}
+    </ul>
+</body>
+</html>
+{% endblock %}

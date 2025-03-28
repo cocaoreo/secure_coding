@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}신고{% endblock %}
+{% block content %}
+<h2>신고하기</h2>
+<form method="POST">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <label for="target_type">신고 유형:</label><br>
+    <select id="target_type" name="target_type" required>
+        <option value="product">상품</option>
+        <option value="user">사용자</option>
+    </select><br><br>
+
+    <label for="target_id">대상 ID:</label><br>
+    <input 
+        type="text" 
+        id="target_id" 
+        name="target_id" 
+        placeholder="상품 ID 또는 사용자 ID" 
+        required
+    ><br><br>
+
+    <label for="reason">신고 사유:</label><br>
+    <textarea 
+        id="reason" 
+        name="reason" 
+        rows="4" 
+        cols="50" 
+        placeholder="신고 사유를 상세히 입력해주세요" 
+        required
+    ></textarea><br><br>
+
+    <button type="submit">신고하기</button>
+</form>
+
+<a href="{{ url_for('dashboard') }}">대시보드로 돌아가기</a>
+{% endblock %}

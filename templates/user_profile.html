@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}상품 상세보기{% endblock %}
+{% block content %}
+<head>
+    <title>{{ user.username }}의 프로필</title>
+</head>
+<body>
+    <h1>{{ user.username }}의 프로필</h1>
+    <p>소개글: {{ user.bio }}</p>
+
+    <h2>등록된 상품</h2>
+    <ul>
+        {% if products %}
+            {% for product in products %}
+                <li>
+                    <a href="{{ url_for('view_product', product_id=product['id']) }}">
+                        {{ product['title'] }}
+                    </a><br>
+                    가격: {{ product['price'] }}원<br>
+                    설명: {{ product['description'] }}
+                </li>
+            {% endfor %}
+        {% else %}
+            <li>등록된 상품이 없습니다.</li>
+        {% endif %}
+    </ul>
+
+    <a href="{{ url_for('dashboard') }}">대시보드로 돌아가기</a>
+</body>
+{% endblock %}

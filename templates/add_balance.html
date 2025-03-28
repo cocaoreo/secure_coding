@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}잔액 충전{% endblock %}
+{% block content %}
+<h2>잔액 충전</h2>
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <label for="amount">충전 금액:</label><br>
+    <input type="number" id="amount" name="amount" required><br><br>
+    <button type="submit">충전하기</button>
+</form>
+
+<a href="{{ url_for('dashboard') }}">대시보드로 돌아가기</a>
+{% endblock %}

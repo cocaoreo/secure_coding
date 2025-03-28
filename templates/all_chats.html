@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}검색{% endblock %}
+{% block content %}
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+<head>
+    <meta charset="UTF-8">
+    <title>채팅 목록</title>
+</head>
+<body>
+<h1>채팅 목록</h1>
+<ul>
+    {% for partner in partners %}
+        <li>
+            <a href="{{ url_for('view_chat_history', user_id=partner['id']) }}">
+                {{ partner['username'] }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="{{ url_for('dashboard') }}">대시보드로 돌아가기</a>
+</body>
+</html>
+{% endblock %}

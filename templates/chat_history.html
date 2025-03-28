@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}{{ other_user.username }}와의 대화{% endblock %}
+{% block content %}
+<h1>{{ other_user.username }}와의 대화</h1>
+<!-- 메시지 목록 -->
+<div id="messages" class="chat-container">
+  {% for chat in chat_history %}
+    <div class="message {% if chat.sender_id == session['user_id'] %}my-message{% else %}other-message{% endif %}">
+      <div class="message-header">
+        <span>{% if chat.sender_id == session['user_id'] %}나{% else %}{{ other_user.username }}{% endif %}</span>
+        <small>{{ chat.timestamp }}</small>
+      </div>
+      <div class="message-content">{{ chat.message }}</div>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- 메시지 입력 -->
+<div class="chat-form">
+  <input type="text" id="message" placeholder="메시지를 입력하세요">
+  <button onclick="sendMessage()">전송</button>
+</div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+<script>
+  // Socket.IO 초기화
+  const socket = io();
+  const currentUserId = "{{ session['user_id'] }}";
+
+  // 메시지 전송 함수
+  function sendMessage() {
+    const messageInput = document.getElementById('message');
+    const message = messageInput.value.trim();
+
+    if (message) {
+      socket.emit('private_message', {
+        receiver_id: "{{ other_user.id }}",
+        message: message
+      });
+
+      messageInput.value = '';
+    }
+  }
+
+  // 서버로부터 메시지 수신 처리
+  socket.on('new_message', function(data) {
+    const chatMessages = document.getElementById('messages');
+    const newMessage = document.createElement('div');
+    const isMyMessage = data.sender_id === currentUserId;
+    newMessage.className = `message ${isMyMessage ? 'my-message' : 'other-message'}`;
+    
+    newMessage.innerHTML = `
+        <div class="message-header">
+            <span>${isMyMessage ? '나' : '{{ other_user.username }}'}</span>
+            <small>${new Date(data.timestamp).toLocaleString()}</small>
+        </div>
+        <div class="message-content">${data.message}</div>
+    `;
+
+    chatMessages.appendChild(newMessage);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  });
+</script>
+
+{% endblock %}
