@@ -84,7 +84,7 @@ def init_db():
             password_hash TEXT NOT NULL,
             is_admin INTEGER DEFAULT 0,
             is_dormant INTEGER DEFAULT 0,
-            login_attemp INTEGER DEFAULT 0
+            login_attempts INTEGER DEFAULT 0
         )
     """)
 
